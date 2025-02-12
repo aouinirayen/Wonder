@@ -1,0 +1,52 @@
+# config/packages/security.yaml
+
+security:
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        # Firewall pour les ressources de développement
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        
+        # Firewall principal
+        main:
+            lazy: true
+            provider: app_user_provider
+            custom_authenticator: App\Security\LoginFormAuthenticator
+            logout:
+                path: app_logout
+                target: app_home
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 semaine
+                path: /
+                always_remember_me: true
+
+    # Contrôle d'accès
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/user/verify, roles: PUBLIC_ACCESS }
+        - { path: ^/user/(login|signup), roles: PUBLIC_ACCESS }
+        - { path: ^/user, roles: ROLE_USER }
+
+# Configuration pour l'environnement de test
+when@test:
+    security:
+        password_hashers:
+            # Environnements de test avec une configuration de hachage moins coûteuse
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 # Valeur la plus faible pour bcrypt
+                time_cost: 3 # Valeur la plus faible pour argon
+                memory_cost: 10 # Valeur la plus faible pour argon
