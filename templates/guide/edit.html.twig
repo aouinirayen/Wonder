@@ -1,13 +1,188 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Guide{% endblock %}
+{% block title %}Modifier le Guide{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .guide-form {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .guide-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #FF6B6B, #4ECDC4);
+        }
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .form-section-title {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .form-section-title i {
+            margin-right: 10px;
+            color: #FF6B6B;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            padding: 0.75rem;
+            transition: all 0.3s;
+            background-color: #fff;
+        }
+        .form-control:focus {
+            border-color: #4ECDC4;
+            box-shadow: 0 0 0 0.2rem rgba(78, 205, 196, 0.25);
+            transform: translateY(-2px);
+        }
+        .input-icon {
+            position: relative;
+        }
+        .input-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        .input-icon input {
+            padding-left: 40px;
+        }
+        .btn-submit {
+            padding: 1rem 2.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            transition: all 0.3s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        .btn-cancel {
+            padding: 1rem 2.5rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+        .btn-cancel:hover {
+            transform: translateY(-3px);
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Guide</h1>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="guide-form">
+                    <div class="mb-4 text-center">
+                        <h1 class="h3 mb-3">Modifier le Guide</h1>
+                        <p class="text-muted">Mettez à jour les informations du guide</p>
+                    </div>
 
-    {{ include('guide/_form.html.twig', {'button_label': 'Update'}) }}
+                    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
 
-    <a href="{{ path('app_guide_index') }}">back to list</a>
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-user"></i>
+                            Informations Personnelles
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_row(form.nom, {
+                                        'label': 'Nom',
+                                        'attr': {
+                                            'class': 'form-control',
+                                            'placeholder': 'Nom du guide'
+                                        }
+                                    }) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_row(form.prenom, {
+                                        'label': 'Prénom',
+                                        'attr': {
+                                            'class': 'form-control',
+                                            'placeholder': 'Prénom du guide'
+                                        }
+                                    }) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-    {{ include('guide/_delete_form.html.twig') }}
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-address-card"></i>
+                            Coordonnées
+                        </h3>
+                        <div class="form-group">
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                {{ form_row(form.email, {
+                                    'label': 'Adresse Email',
+                                    'attr': {
+                                        'class': 'form-control',
+                                        'placeholder': 'exemple@email.com'
+                                    }
+                                }) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-icon">
+                                <i class="fas fa-phone"></i>
+                                {{ form_row(form.num_telephone, {
+                                    'label': 'Numéro de Téléphone',
+                                    'attr': {
+                                        'class': 'form-control',
+                                        'placeholder': '+216 XX XXX XXX'
+                                    }
+                                }) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a href="{{ path('app_guide_index') }}" class="btn btn-outline-secondary btn-cancel">
+                            <i class="fas fa-arrow-left me-2"></i>Retour
+                        </a>
+                        <button type="submit" class="btn btn-submit">
+                            <i class="fas fa-save me-2"></i>Enregistrer
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

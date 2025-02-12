@@ -1,51 +1,108 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Evenement index{% endblock %}
+{% block title %}Gestion des Événements{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .event-card {
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+        .event-card:hover {
+            transform: translateY(-5px);
+        }
+        .event-image {
+            height: 200px;
+            object-fit: cover;
+        }
+        .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+        .event-actions {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .event-card:hover .event-actions {
+            opacity: 1;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Evenement index</h1>
+    {# Tableau des images par défaut pour les événements #}
+    {% set default_event_images = [
+        'https://images.unsplash.com/photo-1492684223066-81342ee5ff30',
+        'https://images.unsplash.com/photo-1511795409834-ef04bbd61622',
+        'https://images.unsplash.com/photo-1505236858219-8359eb29e329',
+        'https://images.unsplash.com/photo-1464047736614-af63643285bf',
+        'https://images.unsplash.com/photo-1511795409834-ef04bbd61622',
+        'https://images.unsplash.com/photo-1472653431158-6364773b2a56'
+    ] %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Date</th>
-                <th>Lieu</th>
-                <th>Description</th>
-                <th>Photo</th>
-                <th>Place_max</th>
-                <th>Prix</th>
-                <th>Status</th>
-                <th>Inetresse</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for evenement in evenements %}
-            <tr>
-                <td>{{ evenement.id }}</td>
-                <td>{{ evenement.nom }}</td>
-                <td>{{ evenement.date ? evenement.date|date('Y-m-d') : '' }}</td>
-                <td>{{ evenement.lieu }}</td>
-                <td>{{ evenement.description }}</td>
-                <td>{{ evenement.photo }}</td>
-                <td>{{ evenement.placeMax }}</td>
-                <td>{{ evenement.prix }}</td>
-                <td>{{ evenement.status }}</td>
-                <td>{{ evenement.inetresse ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_evenement_show', {'id': evenement.id}) }}">show</a>
-                    <a href="{{ path('app_evenement_edit', {'id': evenement.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="11">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 mb-0">Gestion des Événements</h1>
+            <a href="{{ path('app_evenement_new') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouvel Événement
+            </a>
+        </div>
 
-    <a href="{{ path('app_evenement_new') }}">Create new</a>
+        <div class="row">
+            {% for evenement in evenements %}
+                <div class="col-md-4">
+                    <div class="card event-card shadow-sm">
+                        <div class="position-relative">
+                            {% if evenement.photo %}
+                                <img src="{{ asset('uploads/events/' ~ evenement.photo) }}" 
+                                     class="card-img-top event-image" 
+                                     alt="{{ evenement.nom }}">
+                            {% else %}
+                                <img src="{{ default_event_images[loop.index0 % default_event_images|length] }}" 
+                                     class="card-img-top event-image" 
+                                     alt="{{ evenement.nom }}">
+                            {% endif %}
+                            <span class="status-badge badge {% if evenement.status == 'active' %}bg-success{% else %}bg-secondary{% endif %}">
+                                {{ evenement.status }}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ evenement.nom }}</h5>
+                            <p class="card-text text-muted">
+                                <i class="far fa-calendar-alt"></i> {{ evenement.date ? evenement.date|date('d/m/Y') : '' }}
+                                <br>
+                                <i class="fas fa-map-marker-alt"></i> {{ evenement.lieu }}
+                            </p>
+                            <p class="card-text">{{ evenement.description|slice(0, 100) }}...</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="badge bg-info">{{ evenement.placeMax }} places</span>
+                                    <span class="badge bg-primary">{{ evenement.prix }}€</span>
+                                </div>
+                                <div class="event-actions">
+                                    <a href="{{ path('app_evenement_show', {'id': evenement.id}) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ path('app_evenement_edit', {'id': evenement.id}) }}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        <i class="fas fa-info-circle fa-2x mb-3"></i>
+                        <p class="mb-0">Aucun événement trouvé. Créez votre premier événement !</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

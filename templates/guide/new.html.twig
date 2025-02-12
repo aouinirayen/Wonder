@@ -1,11 +1,191 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Guide{% endblock %}
+{% block title %}Ajouter un Nouveau Guide{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .creation-form {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            padding: 0.75rem;
+            transition: all 0.3s;
+        }
+        .form-control:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        }
+        .btn-submit {
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .guide-avatar-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            display: block;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .social-media-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        .expertise-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Guide</h1>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="creation-form">
+                    <div class="mb-4 text-center">
+                        <h1 class="h3 mb-3">Ajouter un Nouveau Guide</h1>
+                        <p class="text-muted">Remplissez les informations ci-dessous pour ajouter un nouveau guide touristique</p>
+                        <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6" 
+                             class="guide-avatar-preview" 
+                             alt="Guide preview"
+                             id="avatar-preview">
+                    </div>
 
-    {{ include('guide/_form.html.twig') }}
+                    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
 
-    <a href="{{ path('app_guide_index') }}">back to list</a>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.nom, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Entrez le nom'
+                                }}) }}
+                                {{ form_errors(form.nom) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.prenom, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Entrez le prénom'
+                                }}) }}
+                                {{ form_errors(form.prenom) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.email, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'exemple@email.com'
+                                }}) }}
+                                {{ form_errors(form.email) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form_label(form.num_telephone, 'Numéro de téléphone', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.num_telephone, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': '+216 XX XXX XXX'
+                                }}) }}
+                                {{ form_errors(form.num_telephone) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="expertise-section">
+                        <h5 class="mb-3">Expertise et Spécialités</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check mb-2">
+                                    <input type="checkbox" class="form-check-input" id="expertise1">
+                                    <label class="form-check-label" for="expertise1">Randonnée</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input type="checkbox" class="form-check-input" id="expertise2">
+                                    <label class="form-check-label" for="expertise2">Sites historiques</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check mb-2">
+                                    <input type="checkbox" class="form-check-input" id="expertise3">
+                                    <label class="form-check-label" for="expertise3">Culture locale</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input type="checkbox" class="form-check-input" id="expertise4">
+                                    <label class="form-check-label" for="expertise4">Gastronomie</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="social-media-section">
+                        <h5 class="mb-3">Réseaux Sociaux</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="Profil Facebook">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fab fa-instagram"></i>
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="Profil Instagram">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a href="{{ path('app_guide_index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Retour
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-submit">
+                            <i class="fas fa-user-plus me-2"></i>Ajouter le Guide
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

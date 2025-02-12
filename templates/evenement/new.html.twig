@@ -1,11 +1,364 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Evenement{% endblock %}
+{% block title %}Créer un Nouvel Événement{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .creation-form {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .creation-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #4a90e2, #67b26f);
+        }
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .form-section-title {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .form-section-title i {
+            margin-right: 10px;
+            color: #4a90e2;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            padding: 0.75rem;
+            transition: all 0.3s;
+            background-color: #fff;
+        }
+        .form-control:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+            transform: translateY(-2px);
+        }
+        .btn-submit {
+            padding: 1rem 2.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: linear-gradient(45deg, #4a90e2, #67b26f);
+            border: none;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+        }
+        .preview-container {
+            position: relative;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .preview-image {
+            max-width: 300px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .preview-image:hover {
+            transform: scale(1.05);
+        }
+        .description-counter {
+            font-size: 0.8rem;
+            color: #6c757d;
+            text-align: right;
+            margin-top: 0.25rem;
+        }
+        .upload-zone {
+            border: 2px dashed #4a90e2;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-zone:hover {
+            background: rgba(74, 144, 226, 0.05);
+        }
+        .upload-icon {
+            font-size: 2rem;
+            color: #4a90e2;
+            margin-bottom: 1rem;
+        }
+        .form-control[type="date"] {
+            position: relative;
+            cursor: pointer;
+        }
+        .price-input {
+            position: relative;
+        }
+        .price-input::after {
+            content: '€';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        .status-select {
+            position: relative;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .status-active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-inactive {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Evenement</h1>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="creation-form">
+                    <div class="mb-4 text-center">
+                        <h1 class="h3 mb-3">Créer un Nouvel Événement</h1>
+                        <p class="text-muted">Remplissez les informations ci-dessous pour créer un nouvel événement</p>
+                    </div>
 
-    {{ include('evenement/_form.html.twig') }}
+                    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+                    
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-info-circle"></i>
+                            Informations Principales
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_row(form.nom, {
+                                        'label': 'Nom de l\'événement',
+                                        'attr': {
+                                            'placeholder': 'Ex: Concert de Jazz',
+                                            'class': 'form-control'
+                                        }
+                                    }) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_row(form.date, {
+                                        'label': 'Date de l\'événement',
+                                        'attr': {
+                                            'class': 'form-control'
+                                        }
+                                    }) }}
+                                </div>
+                            </div>
+                        </div>
 
-    <a href="{{ path('app_evenement_index') }}">back to list</a>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    {{ form_row(form.lieu, {
+                                        'label': 'Lieu',
+                                        'attr': {
+                                            'placeholder': 'Ex: Palais des Congrès',
+                                            'class': 'form-control'
+                                        }
+                                    }) }}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form_row(form.place_max, {
+                                        'label': 'Capacité maximale',
+                                        'attr': {
+                                            'placeholder': 'Ex: 100',
+                                            'class': 'form-control'
+                                        }
+                                    }) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-align-left"></i>
+                            Description de l'Événement
+                        </h3>
+                        <div class="form-group">
+                            {{ form_row(form.description, {
+                                'label': 'Description détaillée',
+                                'attr': {
+                                    'rows': '4',
+                                    'placeholder': 'Décrivez votre événement en détail...',
+                                    'class': 'form-control',
+                                    'onkeyup': 'updateCharCount(this)'
+                                }
+                            }) }}
+                            <div class="description-counter">
+                                <span id="charCount">0</span>/500 caractères
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-cog"></i>
+                            Paramètres de l'Événement
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="price-input">
+                                        {{ form_row(form.prix, {
+                                            'label': 'Prix par personne',
+                                            'attr': {
+                                                'placeholder': 'Ex: 25',
+                                                'class': 'form-control'
+                                            }
+                                        }) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_row(form.status, {
+                                        'label': 'Statut de l\'événement',
+                                        'attr': {
+                                            'class': 'form-control status-select'
+                                        }
+                                    }) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-image"></i>
+                            Image de l'Événement
+                        </h3>
+                        <div class="upload-zone" onclick="document.getElementById('{{ form.photo.vars.id }}').click()">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            {{ form_widget(form.photo, {
+                                'attr': {
+                                    'class': 'd-none',
+                                    'onchange': 'previewImage(this)'
+                                }
+                            }) }}
+                            <p class="mb-0">Cliquez ou glissez une image ici</p>
+                            <small class="text-muted">Format recommandé: JPG, PNG (max 2MB)</small>
+                        </div>
+                        <div class="preview-container">
+                            <img id="preview" class="preview-image d-none" src="#" alt="Aperçu de l'image">
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a href="{{ path('app_evenement_index') }}" class="btn btn-outline-secondary rounded-pill">
+                            <i class="fas fa-arrow-left me-2"></i>Retour
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-submit">
+                            <i class="fas fa-save me-2"></i>Créer l'événement
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function previewImage(input) {
+            const preview = document.getElementById('preview');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('d-none');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function updateCharCount(textarea) {
+            const charCount = textarea.value.length;
+            document.getElementById('charCount').textContent = charCount;
+            
+            // Ajouter une classe visuelle quand on approche de la limite
+            const counter = document.querySelector('.description-counter');
+            if (charCount > 400) {
+                counter.style.color = '#dc3545';
+            } else if (charCount > 300) {
+                counter.style.color = '#ffc107';
+            } else {
+                counter.style.color = '#6c757d';
+            }
+        }
+
+        // Activer le drag & drop pour l'upload d'image
+        const uploadZone = document.querySelector('.upload-zone');
+        
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.style.borderColor = '#4a90e2';
+            uploadZone.style.backgroundColor = 'rgba(74, 144, 226, 0.1)';
+        });
+
+        uploadZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            uploadZone.style.borderColor = '#4a90e2';
+            uploadZone.style.backgroundColor = 'transparent';
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.style.borderColor = '#4a90e2';
+            uploadZone.style.backgroundColor = 'transparent';
+            
+            const fileInput = document.getElementById('{{ form.photo.vars.id }}');
+            const files = e.dataTransfer.files;
+            if (files.length) {
+                fileInput.files = files;
+                previewImage(fileInput);
+            }
+        });
+    </script>
 {% endblock %}
